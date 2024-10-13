@@ -9,16 +9,12 @@ case object Empty extends Tree
 object BinaryTree {
   def add(value: Int, tree: Tree): Tree = tree match {
     case Empty => Node(value)
-    case Node(v, Some(left: Node), right) =>
-      if (value < v) Node(v, Some(add(value, left)), right)
-      else Node(v, Some(left), Some(add(value, right.getOrElse(Empty))))
-    case Node(v, None, right) =>
-      if (value < v) Node(v, Some(Node(value)), right)
-      else Node(v, None, Some(add(value, right.getOrElse(Empty))))
+    case Node(v, left, right) =>
+      if (value < v) Node(v, Some(add(value, left.getOrElse(Empty))), right)
+      else Node(v, left, Some(add(value, right.getOrElse(Empty))))
   }
 
-
-  def delete(value: Int, tree: Tree): Tree = {
+  private def delete(value: Int, tree: Tree): Tree = {
     @tailrec
     def minValue(node: Node): Int = node.left match {
       case Some(l: Node) => minValue(l)
@@ -34,7 +30,9 @@ object BinaryTree {
           case (None, None) => Empty
           case (Some(l), None) => l
           case (None, Some(r)) => r
-          case (Some(l), Some(r)) => Node(minValue(r), left, Some(delete(minValue(r), r)))
+          case (Some(l), Some(r)) =>
+            val min = minValue(r.asInstanceOf[Node]) // We know r must be a Node if it's not Empty
+            Node(min, left, Some(delete(min, r)))
         }
     }
   }

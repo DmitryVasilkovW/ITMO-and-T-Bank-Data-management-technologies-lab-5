@@ -2,17 +2,24 @@ package collections
 
 object HeatProblemOptimized {
   def maxHumidityInWindows(degrees: List[Int], k: Int): List[Int] = {
-    @scala.annotation.tailrec
-    def maxSlidingWindow(deg: List[Int], deque: List[Int], acc: List[Int]): List[Int] = deg match {
-      case Nil => acc.reverse
-      case h :: t =>
-        val updatedDeque = deque.dropWhile(i => i <= h)
-        val newDeque = h :: updatedDeque
-        val newAcc = if (newDeque.length >= k) newDeque.head :: acc else acc
-        maxSlidingWindow(t, newDeque, newAcc)
-    }
+    if (k <= 0) List.empty
+    else if (k >= degrees.length) List(degrees.max)
+    else {
+      val deque = scala.collection.mutable.ArrayDeque[Int]()
+      val result = scala.collection.mutable.ListBuffer[Int]()
 
-    if (degrees.isEmpty || k == 0) List.empty
-    else maxSlidingWindow(degrees, List.empty, List.empty)
+      for (i <- degrees.indices) {
+        if (deque.nonEmpty && deque.head <= i - k) deque.removeHead()
+
+        while (deque.nonEmpty && degrees(deque.last) <= degrees(i)) deque.removeLast()
+
+        deque.append(i)
+
+        if (i >= k - 1) result.append(degrees(deque.head))
+      }
+
+      result.toList
+    }
   }
 }
+
