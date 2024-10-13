@@ -6,4 +6,3 @@ object HeatProblem {
     else degrees.sliding(k).map(_.max).toList
   }
 }
-

@@ -39,7 +39,7 @@ object BinaryTree {
   def breadthFirstSearch(tree: Tree): List[Int] = {
     @tailrec
     def bfs(queue: List[Tree], acc: List[Int]): List[Int] = queue match {
-      case Nil => acc
+      case Nil           => acc
       case Empty :: rest => bfs(rest, acc)
       case Node(value, left, right) :: rest =>
         bfs(rest ++ List(left.getOrElse(Empty), right.getOrElse(Empty)), acc :+ value)
@@ -59,16 +59,20 @@ object BinaryTree {
 
   def print(tree: Tree): Unit = {
     @tailrec
-    def printLevel(nodes: List[Tree], level: Int): Unit = nodes match {
-      case Nil => ()
-      case _ =>
-        val nextLevel = nodes.flatMap {
-          case Empty => List(Empty, Empty)
-          case Node(_, left, right) => List(left.getOrElse(Empty), right.getOrElse(Empty))
-        }
-        println(nodes.collect { case Node(value, _, _) => value }.mkString(" "))
-        printLevel(nextLevel, level + 1)
+    def printLevel(nodes: List[Tree]): Unit = {
+      nodes match {
+        case Nil => ()
+        case _ =>
+          println(nodes.collect { case Node(value, _, _) => value }.mkString(" "))
+
+          val nextLevel = nodes.flatMap {
+            case Node(_, left, right) => List(left.getOrElse(Empty), right.getOrElse(Empty))
+            case Empty                => Nil
+          }
+          printLevel(nextLevel)
+      }
     }
-    printLevel(List(tree), 0)
+    printLevel(List(tree))
   }
+
 }

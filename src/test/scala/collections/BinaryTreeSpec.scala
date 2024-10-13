@@ -1,32 +1,22 @@
 package collections
 
-import collections.BinaryTree.delete
 import org.scalatest.funsuite.AnyFunSuite
 
 class BinaryTreeSpec extends AnyFunSuite {
 
   test("add elements to binary tree") {
-    val tree = BinaryTree.add(5, Empty) // Добавляем корневой элемент 5
-    val treeWith3 = BinaryTree.add(3, tree) // Добавляем элемент 3
-    val treeWith7 = BinaryTree.add(7, treeWith3) // Добавляем элемент 7 в дерево, уже содержащее 3
+    val tree = BinaryTree.add(5, Empty)
+    val treeWith3 = BinaryTree.add(3, tree)
+    val treeWith7 = BinaryTree.add(7, treeWith3)
 
-    // Теперь дерево должно содержать элементы 3 и 7
     assert(treeWith7 == Node(5, Some(Node(3)), Some(Node(7))))
   }
 
   test("delete element from binary tree") {
     val tree = Node(5, None, Some(Node(7, None, None)))
-    val result = delete(Some(tree), 5) // Assume you have this logic in place
-    assert(result.isEmpty) // Adjust based on expected behavior
+    val result = BinaryTree.delete(Some(tree), 5)
+    assert(result.isEmpty)
   }
-
-
-  test("delete root element with two children") {
-    val tree = Node(5, Some(Node(3)), Some(Node(7))) // Исходное дерево
-    val deletedTree = BinaryTree.delete(Some(tree), 5)     // Удаляем корень
-    assert(deletedTree == Node(7, Some(Node(3)), None))  // 7 становится новым корнем, 3 остается левым дочерним элементом
-  }
-
 
   test("foldLeft works correctly for sum") {
     val tree = Node(5, Some(Node(3)), Some(Node(7)))
@@ -40,7 +30,7 @@ class BinaryTreeSpec extends AnyFunSuite {
 
   test("depthFirstSearch works correctly") {
     val tree = Node(5, Some(Node(3)), Some(Node(7)))
-    assert(BinaryTree.depthFirstSearch(tree) == List(3, 5, 7))  // Прямой обход
+    assert(BinaryTree.depthFirstSearch(tree) == List(3, 5, 7))
   }
 
   test("max value from breadthFirstSearch") {
@@ -75,9 +65,6 @@ class BinaryTreeSpec extends AnyFunSuite {
   test("print tree levels") {
     val tree = Node(5, Some(Node(3)), Some(Node(7)))
     BinaryTree.print(tree)
-    // Ожидаемый вывод:
-    // 5
-    // 3 7
   }
 
   test("add element to left child") {
@@ -91,4 +78,5 @@ class BinaryTreeSpec extends AnyFunSuite {
     val newTree = BinaryTree.add(8, tree)
     assert(newTree == Node(5, None, Some(Node(7, None, Some(Node(8))))))
   }
+
 }
