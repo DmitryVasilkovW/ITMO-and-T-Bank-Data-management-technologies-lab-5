@@ -13,7 +13,7 @@ class BinaryTreeSpec extends AnyFunSuite {
   }
 
   test("delete element from binary tree") {
-    val tree = Node(5, None, Some(Node(7, None, None)))
+    val tree = Node(5, None)
     val result = BinaryTree.delete(Some(tree), 5)
     assert(result.isEmpty)
   }

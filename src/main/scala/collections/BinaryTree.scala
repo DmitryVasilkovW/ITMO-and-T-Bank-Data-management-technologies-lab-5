@@ -23,10 +23,22 @@ object BinaryTree {
         } else if (value > v) {
           Some(Node(v, left, delete(right, value)))
         } else {
-          None
+          (left, right) match {
+            case (None, None) => None
+            case (Some(_), None) => left
+            case (None, Some(_)) => right
+            case _ =>
+              val minValue = right.flatMap {
+                case Node(minValue, _, _) => Some(minValue)
+                case Empty => None
+              }.getOrElse(v)
+              Some(Node(minValue, left, delete(right, minValue)))
+          }
         }
+      case Some(Empty) => Some(Empty)
     }
   }
+
 
   def foldLeft[A](tree: Tree, acc: A)(f: (A, Int) => A): A = tree match {
     case Empty => acc
@@ -39,7 +51,7 @@ object BinaryTree {
   def breadthFirstSearch(tree: Tree): List[Int] = {
     @tailrec
     def bfs(queue: List[Tree], acc: List[Int]): List[Int] = queue match {
-      case Nil           => acc
+      case Nil => acc
       case Empty :: rest => bfs(rest, acc)
       case Node(value, left, right) :: rest =>
         bfs(rest ++ List(left.getOrElse(Empty), right.getOrElse(Empty)), acc :+ value)
@@ -67,12 +79,11 @@ object BinaryTree {
 
           val nextLevel = nodes.flatMap {
             case Node(_, left, right) => List(left.getOrElse(Empty), right.getOrElse(Empty))
-            case Empty                => Nil
+            case Empty => Nil
           }
           printLevel(nextLevel)
       }
     }
     printLevel(List(tree))
   }
-
 }
