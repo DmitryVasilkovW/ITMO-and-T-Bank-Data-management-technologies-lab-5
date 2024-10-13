@@ -14,25 +14,16 @@ object BinaryTree {
       else Node(v, left, Some(add(value, right.getOrElse(Empty))))
   }
 
-  private def delete(value: Int, tree: Tree): Tree = {
-    @tailrec
-    def minValue(node: Node): Int = node.left match {
-      case Some(l: Node) => minValue(l)
-      case _ => node.value
-    }
-
-    tree match {
-      case Empty => Empty
-      case Node(v, left, right) if value < v => Node(v, Some(delete(value, left.getOrElse(Empty))), right)
-      case Node(v, left, right) if value > v => Node(v, left, Some(delete(value, right.getOrElse(Empty))))
-      case Node(_, left, right) =>
-        (left, right) match {
-          case (None, None) => Empty
-          case (Some(l), None) => l
-          case (None, Some(r)) => r
-          case (Some(l), Some(r)) =>
-            val min = minValue(r.asInstanceOf[Node]) // We know r must be a Node if it's not Empty
-            Node(min, left, Some(delete(min, r)))
+  def delete(node: Option[Tree], value: Int): Option[Tree] = {
+    node match {
+      case None => None
+      case Some(Node(v, left, right)) =>
+        if (value < v) {
+          Some(Node(v, delete(left, value), right))
+        } else if (value > v) {
+          Some(Node(v, left, delete(right, value)))
+        } else {
+          None
         }
     }
   }
@@ -46,6 +37,7 @@ object BinaryTree {
   }
 
   def breadthFirstSearch(tree: Tree): List[Int] = {
+    @tailrec
     def bfs(queue: List[Tree], acc: List[Int]): List[Int] = queue match {
       case Nil => acc
       case Empty :: rest => bfs(rest, acc)
@@ -66,6 +58,7 @@ object BinaryTree {
   def size(tree: Tree): Int = foldLeft(tree, 0)((acc, _) => acc + 1)
 
   def print(tree: Tree): Unit = {
+    @tailrec
     def printLevel(nodes: List[Tree], level: Int): Unit = nodes match {
       case Nil => ()
       case _ =>

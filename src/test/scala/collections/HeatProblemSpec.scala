@@ -2,8 +2,6 @@ package collections
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import org.scalatest.funsuite.AnyFunSuite
-
 class HeatProblemSpec extends AnyFunSuite {
 
   test("maxHumidityInWindows with basic input") {
@@ -87,4 +85,3 @@ class HeatProblemSpec extends AnyFunSuite {
   }
 
 }
-

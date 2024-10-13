@@ -2,7 +2,8 @@ package collections
 
 object HeatProblemOptimized {
   def maxHumidityInWindows(degrees: List[Int], k: Int): List[Int] = {
-    if (k <= 0) List.empty
+    if (degrees.isEmpty) List.empty
+    else if (k <= 0) List.empty
     else if (k >= degrees.length) List(degrees.max)
     else {
       val deque = scala.collection.mutable.ArrayDeque[Int]()
@@ -22,4 +23,5 @@ object HeatProblemOptimized {
     }
   }
 }
+
 
